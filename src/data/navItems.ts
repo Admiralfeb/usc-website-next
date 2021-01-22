@@ -6,6 +6,10 @@ export const navItems: INavItem[] = [
   { to: '/information', text: 'Information' },
   { to: '/builds', text: 'USC Builds' },
   { to: '/massacres', text: 'Massacre Mission Tracker' },
-  { to: '/merch', text: 'Merch' },
+  {
+    to: 'https://www.redbubble.com/people/UnitedSystems/shop',
+    text: 'Merch',
+    local: false,
+  },
   { to: '/join', text: 'Join' },
 ];

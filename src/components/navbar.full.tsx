@@ -70,7 +70,16 @@ export const NavbarFull = (props: { navItems: INavItem[] }) => {
             </Fragment>
           );
         } else {
-          return (
+          return x.local === false ? (
+            <Button
+              key={x.to}
+              href={x.to}
+              target="_blank"
+              className={classes.navLink}
+            >
+              {x.text}
+            </Button>
+          ) : (
             <Link key={x.to} href={x.to}>
               <Button key={x.to} href={x.to} className={classes.navLink}>
                 {x.text}
