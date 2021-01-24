@@ -1,17 +1,14 @@
 import { IBuildInfov2 } from 'models/builds';
 import { useShipBuildMutations } from './useShipBuildMutations';
 import { IBuildInfoInsert } from 'models/builds/buildInfoInsert';
-import { QueryAllShipBuilds } from 'gql/queries/shipBuilds';
-import { useContext } from 'react';
-import { RealmAppContext } from 'providers';
 import useSWR, { mutate } from 'swr';
-import { gqlFetcher } from 'gql/fetcher';
+import axios from 'axios';
 
 export const useShipBuilds = () => {
   const addRelated = useAddRelatedBuild();
   const addVariant = useAddVariantBuild();
   const { shipBuilds, loading, error } = useAllShipBuilds();
-  const { addBuild, replaceBuild } = useShipBuildMutations();
+  const { addBuild } = useShipBuildMutations();
   return {
     loading,
     shipBuilds,
@@ -19,30 +16,26 @@ export const useShipBuilds = () => {
     addBuild,
     addRelated,
     addVariant,
-    replaceBuild,
   };
 };
 
 export const useAllShipBuilds = () => {
-  const realm = useContext(RealmAppContext);
-  const { data, error } = useSWR('/api/shipBuilds', () =>
-    gqlFetcher(QueryAllShipBuilds, undefined, realm)
+  const { data, error } = useSWR('/api/builds', (url: string) =>
+    axios.get(url)
   );
-  const shipBuilds = data?.shipBuildsv2s ?? [];
+  const shipBuilds = data?.data ?? [];
 
   return { shipBuilds, loading: !error && !data, error };
 };
 
 const useAddRelatedBuild = () => {
-  const { addBuild, updateRelated } = useShipBuildMutations();
+  const { addBuild, updateBuild } = useShipBuildMutations();
   const addRelatedBuild = async (
     currentID: string,
     shipBuilds: IBuildInfov2[],
     buildtoInsert: IBuildInfoInsert
   ) => {
-    const currentBuild = shipBuilds.find(
-      (x) => ((x._id as unknown) as string) === currentID
-    );
+    const currentBuild = shipBuilds.find((x) => x._id === currentID);
     if (currentBuild) {
       const relatedBuilds = currentBuild.related;
 
@@ -51,19 +44,21 @@ const useAddRelatedBuild = () => {
       tempBuild.related = [...tempBuild.related, currentID];
       const addedBuild: IBuildInfov2 | undefined | null = (
         await addBuild(tempBuild)
-      ).data;
+      )[0];
       console.log(addedBuild);
       if (addedBuild) {
-        const buildID = (addedBuild._id as unknown) as string;
+        const buildID = addedBuild._id;
         if (buildID) {
-          await updateRelated(currentID, [...relatedBuilds, buildID]);
+          await updateBuild(currentID, {
+            related: [...relatedBuilds, buildID],
+          });
           for (const id of relatedBuilds) {
-            const build = shipBuilds.find(
-              (x) => ((x._id as unknown) as string) === id
-            );
+            const build = shipBuilds.find((x) => x._id === id);
             if (build) {
               const newRelated = [...build.related, buildID];
-              await updateRelated((build._id as unknown) as string, newRelated);
+              await updateBuild(build._id, {
+                related: newRelated,
+              });
             }
           }
           mutate('/api/shipBuilds');
@@ -79,15 +74,13 @@ const useAddRelatedBuild = () => {
 };
 
 const useAddVariantBuild = () => {
-  const { addBuild, updateVariants, updateRelated } = useShipBuildMutations();
+  const { addBuild, updateBuild } = useShipBuildMutations();
   const addVariantBuild = async (
     parentID: string,
     shipBuilds: IBuildInfov2[],
     buildtoInsert: IBuildInfoInsert
   ) => {
-    const parentBuild = shipBuilds.find(
-      (x) => ((x._id as unknown) as string) === parentID
-    );
+    const parentBuild = shipBuilds.find((x) => x._id === parentID);
     if (parentBuild) {
       const variantBuilds = parentBuild.variants;
 
@@ -96,21 +89,24 @@ const useAddVariantBuild = () => {
       tempBuild.related = variantBuilds;
       const addedBuild: IBuildInfov2 | undefined | null = (
         await addBuild(tempBuild)
-      ).data;
+      )[0];
+      console.log(addedBuild);
       if (addedBuild) {
-        const buildID = (addedBuild._id as unknown) as string;
+        const buildID = addedBuild._id;
         if (buildID) {
           console.log(buildID);
-          await updateVariants(parentID, [...variantBuilds, buildID]);
+          await updateBuild(parentID, {
+            variants: [...variantBuilds, buildID],
+          });
 
           for (const id of variantBuilds) {
             console.log(id);
-            const build = shipBuilds.find(
-              (x) => ((x._id as unknown) as string) === id
-            );
+            const build = shipBuilds.find((x) => x._id === id);
             if (build) {
               const newRelated = [...build.related, buildID];
-              await updateRelated((build._id as unknown) as string, newRelated);
+              await updateBuild(build._id, {
+                related: newRelated,
+              });
             }
           }
           mutate('/api/shipBuilds');
