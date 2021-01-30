@@ -5,7 +5,6 @@ import {
   Button,
   CardContent,
   Card,
-  Fade,
   makeStyles,
 } from '@material-ui/core';
 import { IBuildInfov2, ShipSize } from 'models/builds';
@@ -59,55 +58,50 @@ export const BuildCard = (props: { shipBuild: IBuildInfov2 | undefined }) => {
   const classes = useStyles();
 
   return shipBuild && shipInfo ? (
-    <Fade in={true} timeout={500}>
-      <Card variant="outlined" className={classes.root}>
-        <div className={classes.mediaAndActions}>
-          <CardMedia
-            className={classes.media}
-            image={shipInfo.shipImg}
-            title={shipInfo.name}
-          />
-          <Typography>{ShipSize[shipInfo.size]}</Typography>
-          <div className={classes.actions}>
-            <Button
-              variant="contained"
-              color="secondary"
-              href={shipBuild.buildLink}
-              target="_blank"
-            >
-              View Build
+    <Card variant="outlined" className={classes.root}>
+      <div className={classes.mediaAndActions}>
+        <CardMedia
+          className={classes.media}
+          image={shipInfo.shipImg}
+          title={shipInfo.name}
+        />
+        <Typography>{ShipSize[shipInfo.size]}</Typography>
+        <div className={classes.actions}>
+          <Button
+            variant="contained"
+            color="secondary"
+            href={shipBuild.buildLink}
+            target="_blank"
+          >
+            View Build
+          </Button>
+          <Link href={`/builds/detail/${shipBuild._id}`} passHref>
+            <Button color="primary" variant="contained">
+              More Details
             </Button>
-            <Link
-              href={`/builds/detail/${(shipBuild._id as unknown) as string}`}
-              passHref
-            >
-              <Button color="primary" variant="contained">
-                More Details
-              </Button>
-            </Link>
-          </div>
+          </Link>
         </div>
-        <CardContent className={classes.content}>
-          <Typography>{shipBuild.title}</Typography>
-          <Divider />
-          <Typography>{shipInfo.name} </Typography>
-          {shipInfo.requires && (
-            <Typography>Requirement: {shipInfo.requires}</Typography>
-          )}
-          <TagGroup build={shipBuild} />
-          <Divider />
-          <EngIcons engLevel={shipBuild.engLevel} />
-          <Divider />
-          <Typography>Author: {shipBuild.author}</Typography>
-          {shipBuild.variants.length > 0 ? (
-            <Typography>Has Variants</Typography>
-          ) : null}
-          {shipBuild.related.length > 0 ? (
-            <Typography>Has Related Builds</Typography>
-          ) : null}
-          <div className={classes.spacer} />
-        </CardContent>
-      </Card>
-    </Fade>
+      </div>
+      <CardContent className={classes.content}>
+        <Typography>{shipBuild.title}</Typography>
+        <Divider />
+        <Typography>{shipInfo.name} </Typography>
+        {shipInfo.requires && (
+          <Typography>Requirement: {shipInfo.requires}</Typography>
+        )}
+        <TagGroup build={shipBuild} />
+        <Divider />
+        <EngIcons engLevel={shipBuild.engLevel} />
+        <Divider />
+        <Typography>Author: {shipBuild.author}</Typography>
+        {shipBuild.variants.length > 0 ? (
+          <Typography>Has Variants</Typography>
+        ) : null}
+        {shipBuild.related.length > 0 ? (
+          <Typography>Has Related Builds</Typography>
+        ) : null}
+        <div className={classes.spacer} />
+      </CardContent>
+    </Card>
   ) : null;
 };

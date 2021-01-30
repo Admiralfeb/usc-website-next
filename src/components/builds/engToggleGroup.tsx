@@ -28,35 +28,36 @@ export const EngToggleGroup = (props: IEngToggleGroupProps) => {
     <ToggleButtonGroup
       value={engLevel}
       exclusive
-      onChange={handleEngLevelChange}>
-      <ToggleButton value={0}>
-        <Tooltip title='No Engineering' arrow>
+      onChange={handleEngLevelChange}
+    >
+      <ToggleButton value={0} data-testid="tgl0">
+        <Tooltip title="No Engineering" arrow>
           <div className={classes.engButton}>
             <BlockIcon />
           </div>
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value={1}>
-        <Tooltip title='Simple Engineering' arrow>
+      <ToggleButton value={1} data-testid="tgl1">
+        <Tooltip title="Simple Engineering" arrow>
           <div className={classes.engButton}>
-            <img src={engineerIcon} alt='engineeringIcon' />
+            <img src={engineerIcon} alt="engineeringIcon" />
           </div>
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value={2}>
-        <Tooltip title='Moderate Engineering' arrow>
+      <ToggleButton value={2} data-testid="tgl2">
+        <Tooltip title="Moderate Engineering" arrow>
           <div className={classes.engButton}>
-            <img src={engineerIcon} alt='engineeringIcon' />
-            <img src={engineerIcon} alt='engineeringIcon' />
+            <img src={engineerIcon} alt="engineeringIcon" />
+            <img src={engineerIcon} alt="engineeringIcon" />
           </div>
         </Tooltip>
       </ToggleButton>
-      <ToggleButton value={3}>
-        <Tooltip title='End-Game/Extreme Engineering' arrow>
+      <ToggleButton value={3} data-testid="tgl3">
+        <Tooltip title="End-Game/Extreme Engineering" arrow>
           <div className={classes.engButton}>
-            <img src={engineerIcon} alt='engineeringIcon' />
-            <img src={engineerIcon} alt='engineeringIcon' />
-            <img src={engineerIcon} alt='engineeringIcon' />
+            <img src={engineerIcon} alt="engineeringIcon" />
+            <img src={engineerIcon} alt="engineeringIcon" />
+            <img src={engineerIcon} alt="engineeringIcon" />
           </div>
         </Tooltip>
       </ToggleButton>

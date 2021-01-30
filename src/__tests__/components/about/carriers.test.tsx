@@ -11,6 +11,7 @@ describe('Carriers', () => {
     const spy = jest.spyOn(hooks, 'useFleetCarriers');
     spy.mockReturnValue({
       isLoading: true,
+      error: null,
       fleetCarriers: [],
     });
     const { getByText } = render(<Carriers />);
@@ -23,6 +24,7 @@ describe('Carriers', () => {
     const spy = jest.spyOn(hooks, 'useFleetCarriers');
     spy.mockReturnValue({
       isLoading: false,
+      error: null,
       fleetCarriers: fleetCarrierData,
     });
     const { getByText } = render(<Carriers />);

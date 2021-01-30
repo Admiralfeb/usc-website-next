@@ -5,6 +5,24 @@ import { useMemo } from 'react';
 import { NavbarMobile } from './navbar.mobile';
 import { NavbarFull } from './navbar.full';
 
+const ResponsiveNavbar = ({
+  isMobile,
+  title,
+}: {
+  isMobile: boolean;
+  title: string;
+}) => {
+  return isMobile ? (
+    <div data-testid="mobile">
+      <NavbarMobile title={title} navItems={navItems} />
+    </div>
+  ) : (
+    <div data-testid="full">
+      <NavbarFull navItems={navItems} />
+    </div>
+  );
+};
+
 export const Navbar = () => {
   const pathName = useRouter().pathname;
   const theme = useTheme();
@@ -17,11 +35,7 @@ export const Navbar = () => {
 
   return (
     <>
-      {isMobile ? (
-        <NavbarMobile title={title} navItems={navItems} />
-      ) : (
-        <NavbarFull navItems={navItems} />
-      )}
+      <ResponsiveNavbar isMobile={isMobile} title={title} />
     </>
   );
 };

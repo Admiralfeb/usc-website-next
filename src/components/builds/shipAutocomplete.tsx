@@ -39,12 +39,13 @@ export const ShipAutocomplete = (props: IShipAutocompleteProps) => {
           variant="outlined"
           inputProps={{
             ...params.inputProps,
-            autocomplete: 'new-password',
+            autoComplete: 'new-password',
           }}
         />
       )}
       value={findShipName(ships, shipType)}
       onChange={handleShipChange}
+      data-testid="autocomplete"
     />
   );
 };
